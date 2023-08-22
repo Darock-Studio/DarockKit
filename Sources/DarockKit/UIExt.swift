@@ -134,4 +134,15 @@ public struct NoAutoInput: ViewModifier {
         .foregroundColor(.Neumorphic.secondary)
 }
 
-
+@ViewBuilder public func NeuProgressView(value: Float, total: Float = 1.0, foregroundColor fc: Color = .blue, width: CGFloat = 200, height: CGFloat = 20) -> some View {
+    ZStack(alignment: .leading) {
+        RoundedRectangle(cornerRadius: 18)
+            .fill(Color.Neumorphic.main)
+            .softInnerShadow(RoundedRectangle(cornerRadius: 18), spread: 0.3, radius: 2)
+            .frame(width: width, height: height)
+        
+        RoundedRectangle(cornerRadius: 18)
+            .fill(fc)
+            .frame(width: width * CGFloat(value / total), height: height)
+    }
+}
