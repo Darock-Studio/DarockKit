@@ -1,3 +1,4 @@
+import UIKit
 import Foundation
 import Alamofire
 import SwiftyJSON
@@ -61,5 +62,66 @@ public class DarockKit {
             }
         }
     }
+    //MARK: AlertKit
+    #if os(iOS)
+    public class UIAlert {
+        public enum AlertIcon: Equatable {
+            case done
+            case error
+            case heart
+            case spinnerSmall
+            case spinnerLarge
+            
+            case custom(_ image: UIImage)
+            
+            func createView(lineThick: CGFloat) -> UIView {
+                switch self {
+                case .done: return AlertIconDoneView(lineThick: lineThick)
+                case .error: return AlertIconErrorView(lineThick: lineThick)
+                case .heart: return AlertIconHeartView()
+                case .spinnerSmall: return AlertSpinnerView(style: .medium)
+                case .spinnerLarge: return AlertSpinnerView(style: .large)
+                case .custom(let image):
+                    let imageView = UIImageView(image: image)
+                    imageView.contentMode = .scaleAspectFit
+                    return imageView
+                }
+            }
+        }
+        public enum AlertViewStyle {
+            case iOS16AppleMusic
+            case iOS17AppleMusic
+        }
+        public enum AlertHaptic {
+            case success
+            case warning
+            case error
+            case none
+            
+            func impact() {
+                let generator = UINotificationFeedbackGenerator()
+                switch self {
+                case .success:
+                    generator.notificationOccurred(UINotificationFeedbackGenerator.FeedbackType.success)
+                case .warning:
+                    generator.notificationOccurred(UINotificationFeedbackGenerator.FeedbackType.warning)
+                case .error:
+                    generator.notificationOccurred(UINotificationFeedbackGenerator.FeedbackType.error)
+                case .none:
+                    break
+                }
+            }
+        }
+        
+        public func presentAlert(title: String?, subtitle: String?, icon: AlertIcon?, style: AlertViewStyle?, haptic: AlertHaptic?) {
+            AlertKitAPI.present(title: title, subtitle: subtitle, icon: icon, style: style ?? .iOS17AppleMusic, haptic: haptic)
+        }
+    }
+    #endif
 }
 
+#if os(iOS)
+public protocol AlertIconAnimatable {
+    func animate()
+}
+#endif

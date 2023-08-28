@@ -146,3 +146,20 @@ public struct NoAutoInput: ViewModifier {
             .frame(width: width * CGFloat(value / total), height: height)
     }
 }
+
+@ViewBuilder public func NeuToggle(_ titleKey: LocalizedStringKey, isOn: Binding<Bool>, tint: Color = .green) -> some View {
+    HStack {
+        NeuText(titleKey, fontSize: 20)
+        Toggle("", isOn: isOn)
+            .softSwitchToggleStyle(tint: tint, labelsHidden: true)
+    }
+}
+@ViewBuilder public func NeuToggle(isOn: Binding<Bool>, label: () -> some View, tint: Color = .green) -> some View {
+    HStack {
+        label()
+        Toggle("", isOn: isOn)
+            .softSwitchToggleStyle(tint: tint, labelsHidden: true)
+    }
+}
+
+
