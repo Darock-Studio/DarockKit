@@ -113,7 +113,10 @@ public class DarockKit {
             }
         }
         
-        public func presentAlert(title: String?, subtitle: String?, icon: AlertIcon?, style: AlertViewStyle?, haptic: AlertHaptic?) {
+        
+        public var shared = UIAlert()
+        
+        public func presentAlert(title: String, subtitle: String? = nil, icon: AlertIcon? = nil, style: AlertViewStyle? = nil, haptic: AlertHaptic? = nil) {
             AlertKitAPI.present(title: title, subtitle: subtitle, icon: icon, style: style ?? .iOS17AppleMusic, haptic: haptic)
         }
     }
