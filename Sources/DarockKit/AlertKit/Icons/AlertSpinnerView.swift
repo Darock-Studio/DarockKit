@@ -1,5 +1,6 @@
 import UIKit
 
+#if os(iOS)
 class AlertSpinnerView: UIView {
     
     let activityIndicatorView: UIActivityIndicatorView
@@ -23,3 +24,4 @@ class AlertSpinnerView: UIView {
     }
 
 }
+#endif

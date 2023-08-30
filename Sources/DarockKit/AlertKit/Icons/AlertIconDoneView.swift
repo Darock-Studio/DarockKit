@@ -1,5 +1,6 @@
 import UIKit
 
+#if os(iOS)
 public class AlertIconDoneView: UIView, AlertIconAnimatable {
     
     private let lineThick: CGFloat
@@ -40,3 +41,4 @@ public class AlertIconDoneView: UIView, AlertIconAnimatable {
         animatableLayer.add(animation, forKey: "animation")
     }
 }
+#endif

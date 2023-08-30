@@ -1,5 +1,6 @@
 import UIKit
 
+#if os(iOS)
 public class AlertIconHeartView: UIView {
         
     init() {
@@ -81,4 +82,4 @@ public class AlertIconHeartView: UIView {
         }
     }
 }
-
+#endif

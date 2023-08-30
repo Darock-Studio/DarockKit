@@ -1,7 +1,7 @@
 import UIKit
 
+#if os(iOS)
 extension UILabel {
-    
     func layoutDynamicHeight(x: CGFloat, y: CGFloat, width: CGFloat) {
         frame = CGRect.init(x: x, y: y, width: width, height: frame.height)
         sizeToFit()
@@ -10,3 +10,4 @@ extension UILabel {
         }
     }
 }
+#endif

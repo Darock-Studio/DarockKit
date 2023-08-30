@@ -1,7 +1,7 @@
 import UIKit
 
+#if os(iOS)
 public class AlertAppleMusic17View: UIView {
-    
     open var dismissByTap: Bool = true
     open var dismissInTime: Bool = true
     open var duration: TimeInterval = 1.5
@@ -264,3 +264,4 @@ public class AlertAppleMusic17View: UIView {
         iconView?.center.y = frame.height / 2
     }
 }
+#endif
