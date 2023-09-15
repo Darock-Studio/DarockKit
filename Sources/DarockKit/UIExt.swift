@@ -134,7 +134,7 @@ public struct NoAutoInput: ViewModifier {
         .foregroundColor(.Neumorphic.secondary)
 }
 
-@ViewBuilder public func NeuProgressView(value: Float, total: Float = 1.0, foregroundColor fc: Color = .blue, width: CGFloat = 200, height: CGFloat = 20) -> some View {
+@ViewBuilder public func NeuProgressView(value: Float, total: Float = 1.0, foregroundColor fc: Color = .blue, width: CGFloat = 200, height: CGFloat = 20, paddings: DarockKit.UIExt.PaddingGroup = .init(vertical: 5, horizontal: 10)) -> some View {
     ZStack(alignment: .leading) {
         RoundedRectangle(cornerRadius: 18)
             .fill(Color.Neumorphic.main)
@@ -145,6 +145,7 @@ public struct NoAutoInput: ViewModifier {
             .fill(fc)
             .frame(width: width * CGFloat(value / total), height: height)
     }
+    .padding(paddings)
 }
 
 @ViewBuilder public func NeuToggle(_ titleKey: LocalizedStringKey, isOn: Binding<Bool>, tint: Color = .green) -> some View {
@@ -162,4 +163,24 @@ public struct NoAutoInput: ViewModifier {
     }
 }
 
+public extension DarockKit {
+    class UIExt {
+        public struct PaddingGroup {
+            public init(vertical: CGFloat, horizontal: CGFloat) {
+                self.vertical = vertical
+                self.horizontal = horizontal
+            }
+            
+            let vertical: CGFloat
+            let horizontal: CGFloat
+        }
+    }
+}
 
+internal extension View {
+    func padding(_ pg: DarockKit.UIExt.PaddingGroup) -> some View {
+        return self
+            .padding(.vertical, pg.vertical)
+            .padding(.horizontal, pg.horizontal)
+    }
+}
