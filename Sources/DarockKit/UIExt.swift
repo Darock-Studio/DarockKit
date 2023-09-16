@@ -162,6 +162,14 @@ public struct NoAutoInput: ViewModifier {
     }
 }
 
+@ViewBuilder public func NeuNavigationLink(destination: () -> some View, label: () -> some View, cornerRadius: CGFloat = 18, paddings: [CGFloat] = [5, 20], width: CGFloat? = nil) -> some View {
+    NavigationLink(destination: destination, label: label)
+        .softNavigationLinkStyle(RoundedRectangle(cornerRadius: cornerRadius))
+        .frame(width: width)
+        .padding(.vertical, paddings[0])
+        .padding(.horizontal, paddings[1])
+}
+
 public extension DarockKit {
     class UIExt {
         public struct PaddingGroup {
