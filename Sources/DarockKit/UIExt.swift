@@ -147,7 +147,7 @@ public struct NoAutoInput: ViewModifier {
         } else {
             RoundedRectangle(cornerRadius: 18)
                 .fill(fc)
-                .frame(height: height)
+                .frame(width: CGFloat(value / total), height: height)
         }
     }
     .padding(paddings)
