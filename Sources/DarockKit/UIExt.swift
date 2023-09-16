@@ -136,10 +136,16 @@ public struct NoAutoInput: ViewModifier {
 
 @ViewBuilder public func NeuProgressView(value: Float, total: Float = 1.0, foregroundColor fc: Color = .blue, width: CGFloat? = nil, height: CGFloat? = nil, paddings: DarockKit.UIExt.PaddingGroup = .init(vertical: 5, horizontal: 10)) -> some View {
     ZStack(alignment: .leading) {
-        RoundedRectangle(cornerRadius: 18)
-            .fill(Color.Neumorphic.main)
-            .softInnerShadow(RoundedRectangle(cornerRadius: 18), spread: 0.3, radius: 2)
-            .frame(width: width, height: height)
+        var pwi: CGFloat = 0
+        GeometryReader { geometry in
+            RoundedRectangle(cornerRadius: 18)
+                .fill(Color.Neumorphic.main)
+                .softInnerShadow(RoundedRectangle(cornerRadius: 18), spread: 0.3, radius: 2)
+                .frame(width: width, height: height)
+                .onAppear {
+                    pwi = geometry.size.width
+                }
+        }
         if width != nil {
             RoundedRectangle(cornerRadius: 18)
                 .fill(fc)
@@ -147,7 +153,7 @@ public struct NoAutoInput: ViewModifier {
         } else {
             RoundedRectangle(cornerRadius: 18)
                 .fill(fc)
-                .frame(width: CGFloat(value / total), height: height)
+                .frame(width: pwi * CGFloat(value / total), height: height)
         }
     }
     .padding(paddings)
