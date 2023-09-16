@@ -162,7 +162,7 @@ public struct NoAutoInput: ViewModifier {
     }
 }
 
-@ViewBuilder public func NeuNavigationLink(destination: () -> some View, label: () -> some View, cornerRadius: CGFloat = 18, paddings: [CGFloat] = [5, 20], width: CGFloat? = nil) -> some View {
+@ViewBuilder public func NeuNavigationLink(@ViewBuilder destination: () -> some View, @ViewBuilder label: () -> some View, cornerRadius: CGFloat = 18, paddings: [CGFloat] = [5, 20], width: CGFloat? = nil) -> some View {
     NavigationLink(destination: destination, label: label)
         .softNavigationLinkStyle(RoundedRectangle(cornerRadius: cornerRadius))
         .frame(width: width)
