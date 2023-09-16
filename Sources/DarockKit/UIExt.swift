@@ -134,16 +134,21 @@ public struct NoAutoInput: ViewModifier {
         .foregroundColor(.Neumorphic.secondary)
 }
 
-@ViewBuilder public func NeuProgressView(value: Float, total: Float = 1.0, foregroundColor fc: Color = .blue, width: CGFloat = 200, height: CGFloat = 20, paddings: DarockKit.UIExt.PaddingGroup = .init(vertical: 5, horizontal: 10)) -> some View {
+@ViewBuilder public func NeuProgressView(value: Float, total: Float = 1.0, foregroundColor fc: Color = .blue, width: CGFloat? = nil, height: CGFloat? = nil, paddings: DarockKit.UIExt.PaddingGroup = .init(vertical: 5, horizontal: 10)) -> some View {
     ZStack(alignment: .leading) {
         RoundedRectangle(cornerRadius: 18)
             .fill(Color.Neumorphic.main)
             .softInnerShadow(RoundedRectangle(cornerRadius: 18), spread: 0.3, radius: 2)
             .frame(width: width, height: height)
-        
-        RoundedRectangle(cornerRadius: 18)
-            .fill(fc)
-            .frame(width: width * CGFloat(value / total), height: height)
+        if width != nil {
+            RoundedRectangle(cornerRadius: 18)
+                .fill(fc)
+                .frame(width: width! * CGFloat(value / total), height: height)
+        } else {
+            RoundedRectangle(cornerRadius: 18)
+                .fill(fc)
+                .frame(height: height)
+        }
     }
     .padding(paddings)
 }
