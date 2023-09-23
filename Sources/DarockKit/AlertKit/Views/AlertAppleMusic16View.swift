@@ -1,6 +1,6 @@
+#if os(iOS)
 import UIKit
 
-#if os(iOS)
 public class AlertAppleMusic16View: UIView {
     open var dismissByTap: Bool = true
     open var dismissInTime: Bool = true

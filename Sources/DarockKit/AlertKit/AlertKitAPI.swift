@@ -1,6 +1,6 @@
+#if os(iOS)
 import UIKit
 
-#if os(iOS)
 public enum AlertKitAPI {
     public static func present(title: String? = nil, subtitle: String? = nil, icon: DarockKit.UIAlert.AlertIcon? = nil, style: DarockKit.UIAlert.AlertViewStyle, haptic: DarockKit.UIAlert.AlertHaptic? = nil) {
         switch style {

@@ -1,6 +1,6 @@
+#if os(iOS)
 import UIKit
 
-#if os(iOS)
 public class AlertIconErrorView: UIView, AlertIconAnimatable {
 
     private let lineThick: CGFloat

@@ -1,6 +1,6 @@
+#if os(iOS)
 import UIKit
 
-#if os(iOS)
 extension UIFont {
     static func preferredFont(forTextStyle style: TextStyle, weight: Weight, addPoints: CGFloat = 0) -> UIFont {
         let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style)
