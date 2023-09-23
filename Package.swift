@@ -25,7 +25,7 @@ let package = Package(
             dependencies: [
                 "Alamofire",
                 "SwiftyJSON",
-                "SwiftJWT",
+                //"Swift-JWT",
                 "SwiftDate"
             ]
         )
