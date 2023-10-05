@@ -29,7 +29,10 @@ public class AlertAppleMusic17View: UIView {
         return view
     }()
     
-    public init(title: String?, subtitle: String?, icon: DarockKit.UIAlert.AlertIcon?) {
+    public init(title: String?, subtitle: String?, icon: DarockKit.UIAlert.AlertIcon?, duration: TimeInterval?) {
+        if let duration = duration {
+            self.duration = duration
+        }
         
         if let title = title {
             let label = UILabel()
