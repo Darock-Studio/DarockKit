@@ -12,7 +12,9 @@ on:
 jobs:
   build:
     runs-on: macos-13
-
+    strategy:
+      matrix:
+        configuration: [iOS, watchOS, macOS]
     steps:
     - uses: actions/checkout@v3
     
@@ -20,5 +22,13 @@ jobs:
       run: sudo xcode-select -s /Applications/Xcode_15.0.app
         
     - name: Archive
-      run: xcodebuild archive -scheme DarockKit -destination "generic/platform=iOS" -archivePath "./DarockKit"
+      env:
+          deOs: ${{ matrix.configuration }}
+      run: xcodebuild archive -scheme DarockKit -destination "generic/platform=$env:deOs" -archivePath "./DarockKit-$env:deOs"
       
+    - name: Upload Archive
+      uses: actions/upload-artifact@v3
+      with:
+        name: DarockKit-${{ matrix.configuration }}
+        path: ./DarockKit-${{ matrix.configuration }}
+          
