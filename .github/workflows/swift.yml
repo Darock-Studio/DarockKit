@@ -23,9 +23,9 @@ jobs:
         
     - name: Archive
       env:
-          deOs: ${{ matrix.configuration }}
-      run: xcodebuild archive -scheme DarockKit -destination "generic/platform=$env:deOs" -archivePath "./DarockKit-$env:deOs"
-      
+        deOs: ${{ matrix.configuration }}
+      run: xcodebuild archive -scheme DarockKit -destination "generic/platform=${{ env.deOs }}" -archivePath "./DarockKit-${{ env.deOs }}"
+  
     - name: Upload Archive
       uses: actions/upload-artifact@v3
       with:
