@@ -26,6 +26,7 @@ public struct NoAutoInput: ViewModifier {
     }
 }
 
+#if !os(visionOS)
 //MARK: Neumorphic
 @ViewBuilder public func NeuInput(_ placeholder: String, icon: String, text: Binding<String>, password: Bool = false, paddings: [CGFloat] = [5, 20], noAutoInput: Bool = false) -> some View {
     VStack {
@@ -169,6 +170,7 @@ public struct NoAutoInput: ViewModifier {
         .padding(.vertical, paddings[0])
         .padding(.horizontal, paddings[1])
 }
+#endif
 
 public extension DarockKit {
     class UIExt {
