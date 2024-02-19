@@ -1,3 +1,4 @@
+#if !os(visionOS)
 import SwiftUI
 
 public extension Color {
@@ -39,8 +40,5 @@ public extension Color {
             NeumorphicKit.color(light: defaultDarkShadowSolidColor, dark: darkThemeDarkShadowSolidColor)
         }
     }
-    
-
-    
-    
 }
+#endif

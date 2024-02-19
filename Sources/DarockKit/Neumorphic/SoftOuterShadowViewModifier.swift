@@ -4,6 +4,7 @@
 //  Copyright © 2020 Costa Chung. All rights reserved.
 //  Neumorphism Soft UI
 
+#if !os(visionOS)
 import SwiftUI
 
 private struct SoftOuterShadowViewModifier: ViewModifier {
@@ -34,3 +35,4 @@ extension View {
     }
     
 }
+#endif

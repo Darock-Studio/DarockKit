@@ -5,6 +5,7 @@
 //  Neumorphism Soft UI
 //
 
+#if !os(visionOS)
 import SwiftUI
 
 private struct SoftInnerShadowViewModifier<S: Shape> : ViewModifier {
@@ -85,3 +86,4 @@ extension View {
     }
     
 }
+#endif

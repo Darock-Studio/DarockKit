@@ -5,6 +5,7 @@
 //  Created by Costa Chung on 11/12/2020.
 //
 
+#if !os(visionOS)
 import SwiftUI
 
 public struct SoftDynamicToggleStyle<S: Shape> : ToggleStyle {
@@ -124,5 +125,5 @@ extension Toggle {
     }
     
 }
-
+#endif
 

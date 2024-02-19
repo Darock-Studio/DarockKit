@@ -4,6 +4,7 @@
 //  Copyright © 2020 Costa Chung. All rights reserved.
 //  Neumorphism Soft UI
 
+#if !os(visionOS)
 import SwiftUI
 
 extension View {
@@ -16,3 +17,4 @@ extension View {
     )
   }
 }
+#endif

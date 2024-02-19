@@ -4,6 +4,7 @@
 //  Copyright © 2020 Costa Chung. All rights reserved.
 //  Neumorphism Soft UI
 
+#if !os(visionOS)
 import SwiftUI
 
 public enum SoftButtonPressedEffect {
@@ -134,3 +135,4 @@ extension NavigationLink {
         self.buttonStyle(SoftDynamicButtonStyle(content, mainColor: mainColor, textColor: textColor, darkShadowColor: darkShadowColor, lightShadowColor: lightShadowColor, pressedEffect : pressedEffect, padding:padding))
     }
 }
+#endif

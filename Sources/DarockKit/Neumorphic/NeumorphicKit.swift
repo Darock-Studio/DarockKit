@@ -4,6 +4,7 @@
 //  Copyright © 2020 Costa Chung. All rights reserved.
 //  Neumorphism Soft UI
 
+#if !os(visionOS)
 import SwiftUI
 
 public struct NeumorphicKit {
@@ -56,6 +57,6 @@ public struct NeumorphicKit {
     }
 
 }
-
+#endif
 
 
