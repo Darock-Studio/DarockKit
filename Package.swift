@@ -14,9 +14,8 @@ let package = Package(
             targets: ["DarockKit"])
     ],
     dependencies: [
-        .package(url: "https://github.com/Alamofire/Alamofire", exact: "5.5.0"),
+        .package(url: "https://github.com/Alamofire/Alamofire", from: "5.8.1"),
         .package(url: "https://github.com/SwiftyJSON/SwiftyJSON", from: "4.0.0"),
-        .package(url: "https://github.com/Kitura/Swift-JWT", from: "4.0.1"),
         .package(url: "https://github.com/malcommac/SwiftDate", from: "7.0.0")
     ],
     targets: [
@@ -25,7 +24,6 @@ let package = Package(
             dependencies: [
                 "Alamofire",
                 "SwiftyJSON",
-                //"SwiftJWT",
                 "SwiftDate"
             ]
         )
