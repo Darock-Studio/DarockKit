@@ -199,8 +199,11 @@ internal extension View {
 
 #if os(watchOS)
 public struct VolumeControlView: WKInterfaceObjectRepresentable {
-    public typealias WKInterfaceObjectType = WKInterfaceVolumeControl
+    public init() {
+        
+    }
     
+    public typealias WKInterfaceObjectType = WKInterfaceVolumeControl
     
     public func makeWKInterfaceObject(context: WKInterfaceObjectRepresentableContext<VolumeControlView>) -> WKInterfaceVolumeControl {
         // Return the interface object that the view displays.
