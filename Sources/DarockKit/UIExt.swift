@@ -7,6 +7,9 @@
 
 import Foundation
 import SwiftUI
+#if canImport(WatchKit)
+import WatchKit
+#endif
 
 public struct CenterAlign: ViewModifier {
     public func body(content: Content) -> some View {
@@ -191,5 +194,198 @@ internal extension View {
         return self
             .padding(.vertical, pg.vertical)
             .padding(.horizontal, pg.horizontal)
+    }
+}
+
+#if os(watchOS)
+public struct VolumeControlView: WKInterfaceObjectRepresentable {
+    public typealias WKInterfaceObjectType = WKInterfaceVolumeControl
+    
+    
+    public func makeWKInterfaceObject(context: WKInterfaceObjectRepresentableContext<VolumeControlView>) -> WKInterfaceVolumeControl {
+        // Return the interface object that the view displays.
+        return WKInterfaceVolumeControl(origin: .local)
+    }
+    
+    public func updateWKInterfaceObject(_ map: WKInterfaceVolumeControl, context: WKInterfaceObjectRepresentableContext<VolumeControlView>) {
+        
+    }
+}
+
+public struct Zoomable: ViewModifier {
+    @AppStorage("MaxmiumScale") var maxmiumScale = 6.0
+    @State var scale: CGFloat = 1.0
+    @State var offset = CGSize.zero
+    @State var lastOffset = CGSize.zero
+    public func body(content: Content) -> some View {
+        content
+            .scaleEffect(self.scale)
+            .focusable()
+            .digitalCrownRotation($scale, from: 0.5, through: maxmiumScale, by: 0.02, sensitivity: .low, isHapticFeedbackEnabled: true)
+            .offset(x: offset.width, y: offset.height)
+            .gesture(
+                DragGesture()
+                    .onChanged { gesture in
+                        offset = CGSize(width: gesture.translation.width + lastOffset.width, height: gesture.translation.height + lastOffset.height)
+                    }
+                    .onEnded { _ in
+                        lastOffset = offset
+                    }
+            )
+            .onDisappear {
+                offset = CGSize.zero
+                lastOffset = CGSize.zero
+            }
+            .onChange(of: scale) { value in
+                if value < 2.0 {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        offset = CGSize.zero
+                        lastOffset = CGSize.zero
+                    }
+                }
+            }
+    }
+}
+#else
+public struct Zoomable: ViewModifier {
+    @AppStorage("MaxmiumScale") var maxmiumScale = 6.0
+    @State var scale: CGFloat = 1.0
+    @State var offset = CGSize.zero
+    @State var lastOffset = CGSize.zero
+    public func body(content: Content) -> some View {
+        content
+            .scaleEffect(self.scale)
+            .offset(x: offset.width, y: offset.height)
+            .gesture(
+                DragGesture()
+                    .onChanged { gesture in
+                        offset = CGSize(width: gesture.translation.width + lastOffset.width, height: gesture.translation.height + lastOffset.height)
+                    }
+                    .onEnded { _ in
+                        lastOffset = offset
+                    }
+            )
+            .gesture(
+                MagnificationGesture()
+                    .onChanged { value in
+                        self.scale = value
+                    }
+            )
+            .onDisappear {
+                offset = CGSize.zero
+                lastOffset = CGSize.zero
+            }
+    }
+}
+#endif
+
+#if !os(watchOS)
+import WebKit
+
+public struct WebView: UIViewRepresentable {
+    let url: URL
+    
+    public func makeUIView(context: Context) -> WKWebView {
+        let webView = WKWebView()
+        webView.load(URLRequest(url: url))
+        return webView
+    }
+    
+    public func updateUIView(_ uiView: WKWebView, context: Context) {}
+}
+
+public struct TextSelectView: View {
+    @usableFromInline var text: String
+    
+    @usableFromInline
+    init(text: String) {
+        self.text = text
+    }
+    
+    public var body: some View {
+        VStack {
+            TextEditor(text: .constant(text))
+                .padding()
+        }
+    }
+}
+
+public struct CopyableView<V: View>: View {
+    var content: String
+    var allowSelect: Bool
+    var view: () -> V
+    @State var present = false
+    init(_ content: String, allowSelect: Bool = true, view: @escaping () -> V) {
+        self.content = content
+        self.allowSelect = allowSelect
+        self.view = view
+    }
+    public var body: some View {
+        view()
+            .contextMenu {
+                Button(action: {
+                    UIPasteboard.general.string = content
+#if !os(visionOS)
+                    AlertKitAPI.present(title: "已复制", subtitle: "简介内容已复制到剪贴板", icon: .done, style: .iOS17AppleMusic, haptic: .success)
+#endif
+                }, label: {
+                    Label("复制", systemImage: "doc.on.doc")
+                })
+                if allowSelect {
+                    Button(action: {
+                        present = true
+                    }, label: {
+                        Label("选择文本", systemImage: "selection.pin.in.out")
+                    })
+                }
+            }
+            .sheet(isPresented: $present, content: {
+                TextSelectView(text: content)
+            })
+    }
+}
+#endif
+
+public extension View {
+    func onPressChange(_ action: @escaping (Bool) -> Void) -> some View {
+        self.buttonStyle(ButtonStyleForPressAction(pressAction: action))
+    }
+}
+public struct ButtonStyleForPressAction: ButtonStyle {
+    var pressAction: (Bool) -> Void
+    public func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .onChange(of: configuration.isPressed) { value in
+                pressAction(value)
+            }
+    }
+}
+
+public extension Binding {
+    // From - rdar://so?64655458
+    func onUpdate(_ closure: @escaping () -> Void) -> Binding<Value> {
+        Binding(get: {
+            wrappedValue
+        }, set: { newValue in
+            wrappedValue = newValue
+            closure()
+        })
+    }
+    func onUpdate(_ closure: @escaping (_ oldValue: Value, _ newValue: Value) -> Void) -> Binding<Value> {
+        Binding(get: {
+            wrappedValue
+        }, set: { newValue in
+            let oldValue = wrappedValue
+            wrappedValue = newValue
+            closure(oldValue, newValue)
+        })
+    }
+}
+
+public extension View {
+    func border<S>(_ content: S, width: CGFloat = 1, cornerRadius: CGFloat) -> some View where S : ShapeStyle {
+        let roundedRect = RoundedRectangle(cornerRadius: cornerRadius)
+        return clipShape(roundedRect)
+            .overlay(roundedRect.strokeBorder(content, lineWidth: width))
     }
 }

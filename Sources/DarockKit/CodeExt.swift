@@ -7,30 +7,43 @@
 
 import Foundation
 import SwiftUI
+import CommonCrypto
 
-extension String {
-    public func apiFixed(_ fixType: ApiFixType = .server) -> String {
+public extension String {
+    func apiFixed(_ fixType: ApiFixType = .server) -> String {
         if fixType == .server {
             return String(String(self.dropFirst()).dropLast())
         } else {
             return "\"\(self)\""
         }
     }
-    public func urlEncoded() -> String {
+    func urlEncoded() -> String {
         let encodeUrlString = self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         return encodeUrlString ?? ""
     }
-    public func urlDecoded() -> String {
+    func urlDecoded() -> String {
         return self.removingPercentEncoding ?? ""
     }
-    public func base64Decoded() -> String? {
+    func base64Decoded() -> String? {
         guard let data = Data(base64Encoded: self) else {
             return nil
         }
         return String(data: data, encoding: .utf8)
     }
-    public func base64Encoded() -> String {
+    func base64Encoded() -> String {
             return Data(self.utf8).base64EncodedString()
+    }
+    var md5: String {
+        let data = Data(self.utf8)
+        let hash = data.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) -> [UInt8] in
+            var hash = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
+            CC_MD5(bytes.baseAddress, CC_LONG(data.count), &hash)
+            return hash
+        }
+        return hash.map { String(format: "%02x", $0) }.joined()
+    }
+    subscript(rhs: Int) -> Character {
+        return self[self.index(self.startIndex, offsetBy: rhs)]
     }
 }
 
@@ -61,6 +74,17 @@ import CoreHaptics
 
 var globalHapticEngine: CHHapticEngine?
 
+public func InitHapticEngine() {
+    if CHHapticEngine.capabilitiesForHardware().supportsHaptics {
+        do {
+            globalHapticEngine = try CHHapticEngine()
+            try globalHapticEngine?.start()
+        } catch {
+            print("创建引擎时出现错误： \(error.localizedDescription)")
+        }
+    }
+}
+
 public func PlayHaptic(sharpness: Float, intensity: Float) {
     guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
     var events = [CHHapticEvent]()
@@ -77,6 +101,12 @@ public func PlayHaptic(sharpness: Float, intensity: Float) {
     }
 }
 #endif
+
+public extension Array {
+    subscript(from index: Int) -> Element? {
+        return self.indices ~= index ? self[index] : nil
+    }
+}
 
 postfix operator ++
 postfix operator --
