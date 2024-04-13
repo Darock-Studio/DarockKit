@@ -217,6 +217,11 @@ public struct Zoomable: ViewModifier {
     @State var scale: CGFloat = 1.0
     @State var offset = CGSize.zero
     @State var lastOffset = CGSize.zero
+    
+    public init() {
+        
+    }
+    
     public func body(content: Content) -> some View {
         content
             .scaleEffect(self.scale)
@@ -252,6 +257,11 @@ public struct Zoomable: ViewModifier {
     @State var scale: CGFloat = 1.0
     @State var offset = CGSize.zero
     @State var lastOffset = CGSize.zero
+    
+    public init() {
+        
+    }
+    
     public func body(content: Content) -> some View {
         content
             .scaleEffect(self.scale)
