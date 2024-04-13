@@ -312,10 +312,9 @@ public struct WebView: UIViewRepresentable {
 }
 
 public struct TextSelectView: View {
-    @usableFromInline var text: String
+    var text: String
     
-    @usableFromInline
-    init(text: String) {
+    public init(text: String) {
         self.text = text
     }
     
@@ -332,7 +331,7 @@ public struct CopyableView<V: View>: View {
     var allowSelect: Bool
     var view: () -> V
     @State var present = false
-    init(_ content: String, allowSelect: Bool = true, view: @escaping () -> V) {
+    public init(_ content: String, allowSelect: Bool = true, view: @escaping () -> V) {
         self.content = content
         self.allowSelect = allowSelect
         self.view = view
@@ -370,6 +369,9 @@ public extension View {
 }
 public struct ButtonStyleForPressAction: ButtonStyle {
     var pressAction: (Bool) -> Void
+    public init(pressAction: @escaping (Bool) -> Void) {
+        self.pressAction = pressAction
+    }
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .onChange(of: configuration.isPressed) { value in
