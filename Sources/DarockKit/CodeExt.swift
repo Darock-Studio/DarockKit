@@ -55,3 +55,97 @@ public enum ApiFixType {
     case client
     case server
 }
+
+#if canImport(CoreHaptics)
+import CoreHaptics
+
+var globalHapticEngine: CHHapticEngine?
+
+public func PlayHaptic(sharpness: Float, intensity: Float) {
+    guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+    var events = [CHHapticEvent]()
+    let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: intensity)
+    let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: sharpness)
+    let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: 0)
+    events.append(event)
+    do {
+        let pattern = try CHHapticPattern(events: events, parameters: [])
+        let player = try globalHapticEngine?.makePlayer(with: pattern)
+        try player?.start(atTime: 0)
+    } catch {
+        print("Failed to play pattern: \(error.localizedDescription).")
+    }
+}
+#endif
+
+postfix operator ++
+postfix operator --
+prefix operator ++
+prefix operator --
+public extension Int {
+    @discardableResult
+    static postfix func ++ (num: inout Int) -> Int {
+        num += 1
+        return num - 1
+    }
+    
+    @discardableResult
+    static postfix func -- (num: inout Int) -> Int {
+        num -= 1
+        return num + 1
+    }
+    
+    @discardableResult
+    static prefix func ++ (num: inout Int) -> Int {
+        num += 1
+        return num
+    }
+    
+    @discardableResult
+    static prefix func -- (num: inout Int) -> Int {
+        num -= 1
+        return num
+    }
+}
+
+public extension Bool {
+    @_transparent
+    init(_ input: Int) {
+        if input == 0 {
+            self = false
+        } else {
+            self = true
+        }
+    }
+}
+public extension Int {
+    @_transparent
+    init (_ input: Bool) {
+        if input {
+            self = 1
+        } else {
+            self = 0
+        }
+    }
+}
+
+infix operator ~
+public extension Float {
+    static func ~ (lhs: Float, rhs: Int) -> String {
+        return String(format: "%.\(rhs)f", lhs)
+    }
+}
+public extension Double {
+    static func ~ (lhs: Double, rhs: Int) -> String {
+        return String(format: "%.\(rhs)f", lhs)
+    }
+}
+
+prefix operator &&
+public prefix func && <T>(input: inout T) -> UnsafeMutablePointer<T> {
+    withUnsafeMutablePointer(to: &input) { $0 }
+}
+prefix operator *
+public prefix func * <T>(ptr: UnsafeMutablePointer<T>) -> T {
+    return ptr.pointee
+}
