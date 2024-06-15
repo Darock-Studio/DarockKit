@@ -6,7 +6,7 @@ import SwiftyJSON
 public class DarockKit {
     //MARK: Network
     public class Network {
-        public static let shared = Network()
+        @MainActor public static let shared = Network()
         
         @discardableResult
         open func request(_ convertible: URLConvertible, method: HTTPMethod = .get, parameters: Parameters? = nil, encoding: ParameterEncoding = URLEncoding.default, headers: HTTPHeaders? = nil, interceptor: RequestInterceptor? = nil, requestModifier: Session.RequestModifier? = nil) -> DataRequest {
