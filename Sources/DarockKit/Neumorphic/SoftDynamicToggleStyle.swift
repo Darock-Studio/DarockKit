@@ -5,7 +5,7 @@
 //  Created by Costa Chung on 11/12/2020.
 //
 
-#if !os(visionOS)
+#if !os(visionOS) && !os(tvOS)
 import SwiftUI
 
 public struct SoftDynamicToggleStyle<S: Shape> : ToggleStyle {

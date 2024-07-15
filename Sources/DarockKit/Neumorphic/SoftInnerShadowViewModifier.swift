@@ -5,7 +5,7 @@
 //  Neumorphism Soft UI
 //
 
-#if !os(visionOS)
+#if !os(visionOS) && !os(tvOS)
 import SwiftUI
 
 private struct SoftInnerShadowViewModifier<S: Shape> : ViewModifier {
