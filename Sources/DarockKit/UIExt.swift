@@ -254,7 +254,7 @@ public struct Zoomable: ViewModifier {
             }
     }
 }
-#else
+#elseif !os(tvOS)
 public struct Zoomable: ViewModifier {
     @AppStorage("MaxmiumScale") var maxmiumScale = 6.0
     @State var scale: CGFloat = 1.0
