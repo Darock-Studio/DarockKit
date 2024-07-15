@@ -29,7 +29,7 @@ public struct NoAutoInput: ViewModifier {
     }
 }
 
-#if !os(visionOS)
+#if !os(visionOS) && !os(tvOS)
 //MARK: Neumorphic
 @ViewBuilder public func NeuInput(_ placeholder: String, icon: String, text: Binding<String>, password: Bool = false, paddings: [CGFloat] = [5, 20], noAutoInput: Bool = false) -> some View {
     VStack {
@@ -292,7 +292,7 @@ public struct Zoomable: ViewModifier {
 }
 #endif
 
-#if !os(watchOS)
+#if canImport(WebKit)
 import WebKit
 
 public struct WebView: UIViewRepresentable {

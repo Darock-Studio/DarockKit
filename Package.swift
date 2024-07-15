@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "DarockKit",
     platforms: [
-        .iOS(.v15)
+        .iOS(.v15), .watchOS(.v8), .macOS(.v10_15), .tvOS(.v15)
     ],
     products: [
         .library(
