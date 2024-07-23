@@ -3,6 +3,8 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
+private let void: Void = ()
+
 public class DarockKit {
     //MARK: Network
     public class Network {
@@ -42,6 +44,43 @@ public class DarockKit {
                     }
                 } else {
                     callback("", false)
+                }
+            }
+        }
+        
+        open func requestJSON(_ convertible: URLConvertible, method: HTTPMethod = .get, parameters: Parameters? = nil, encoding: ParameterEncoding = URLEncoding.default, headers: HTTPHeaders? = nil, interceptor: RequestInterceptor? = nil, requestModifier: Session.RequestModifier? = nil) async -> Result<JSON, Void> {
+            await withCheckedContinuation { continuation in
+                let convertible = RequestConvertible(url: convertible, method: method, parameters: parameters, encoding: encoding, headers: headers, requestModifier: requestModifier)
+                AF.request(convertible).responseData { response in
+                    let data = response.data
+                    if data != nil {
+                        do {
+                            let json = try JSON(data: data!)
+                            continuation.resume(returning: .success(json))
+                        } catch {
+                            continuation.resume(returning: .failure(void))
+                        }
+                    } else {
+                        continuation.resume(returning: .failure(void))
+                    }
+                }
+            }
+        }
+        open func requestString(_ convertible: URLConvertible, method: HTTPMethod = .get, parameters: Parameters? = nil, encoding: ParameterEncoding = URLEncoding.default, headers: HTTPHeaders? = nil, interceptor: RequestInterceptor? = nil, requestModifier: Session.RequestModifier? = nil) async -> Result<String, Void> {
+            await withCheckedContinuation { continuation in
+                let convertible = RequestConvertible(url: convertible, method: method, parameters: parameters, encoding: encoding, headers: headers, requestModifier: requestModifier)
+                AF.request(convertible).responseData { response in
+                    let data = response.data
+                    if data != nil {
+                        let str = String(data: data!, encoding: .utf8)
+                        if str != nil {
+                            continuation.resume(returning: .success(str!))
+                        } else {
+                            continuation.resume(returning: .failure(void))
+                        }
+                    } else {
+                        continuation.resume(returning: .failure(void))
+                    }
                 }
             }
         }
@@ -128,3 +167,9 @@ public protocol AlertIconAnimatable {
     func animate()
 }
 #endif
+
+@frozen
+public enum Result<Success, Failure> {
+    case success(Success)
+    case failure(Failure)
+}

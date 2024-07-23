@@ -11,6 +11,7 @@ import SwiftUI
 import WatchKit
 #endif
 
+@available(*, deprecated, renamed: "View.centerAligned", message: "`CenterAlign` modifier was deprecated")
 public struct CenterAlign: ViewModifier {
     public func body(content: Content) -> some View {
         HStack {
@@ -20,10 +21,27 @@ public struct CenterAlign: ViewModifier {
         }
     }
 }
+public extension View {
+    func centerAligned() -> some View {
+        HStack {
+            Spacer()
+            self
+            Spacer()
+        }
+    }
+}
 
+@available(*, deprecated, renamed: "View.noAutoInput", message: "`NoAutoInput` modifier was deprecated")
 public struct NoAutoInput: ViewModifier {
     public func body(content: Content) -> some View {
         content
+            .autocorrectionDisabled()
+            .textInputAutocapitalization(.never)
+    }
+}
+public extension View {
+    func noAutoInput() -> some View {
+        self
             .autocorrectionDisabled()
             .textInputAutocapitalization(.never)
     }
@@ -297,20 +315,31 @@ import WebKit
 
 public struct WebView: UIViewRepresentable {
     let url: URL
-    
+    let builder: ((WKWebView) -> WKWebView)?
+
     public init(url: URL) {
         self.url = url
+        self.builder = nil
+    }
+    public init(url: URL, builder: @escaping (WKWebView) -> WKWebView) {
+        self.url = url
+        self.builder = builder
     }
     
     public func makeUIView(context: Context) -> WKWebView {
-        let webView = WKWebView()
+        var webView = WKWebView()
+        if let builder {
+            webView = builder(webView)
+        }
         webView.load(URLRequest(url: url))
         return webView
     }
     
-    public func updateUIView(_ uiView: WKWebView, context: Context) {}
+    public func updateUIView(_ uiView: WKWebView, context: Context) { }
 }
+#endif
 
+#if os(iOS)
 public struct TextSelectView: View {
     var text: String
     
@@ -341,9 +370,7 @@ public struct CopyableView<V: View>: View {
             .contextMenu {
                 Button(action: {
                     UIPasteboard.general.string = content
-#if !os(visionOS)
                     AlertKitAPI.present(title: "已复制", subtitle: "简介内容已复制到剪贴板", icon: .done, style: .iOS17AppleMusic, haptic: .success)
-#endif
                 }, label: {
                     Label("复制", systemImage: "doc.on.doc")
                 })
