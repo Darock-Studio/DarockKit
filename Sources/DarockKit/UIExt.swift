@@ -104,6 +104,7 @@ public extension View {
     .padding(.vertical, paddings[0])
     .padding(.horizontal, paddings[1])
 }
+@_disfavoredOverload
 @ViewBuilder public func NeuButton(action: @escaping () -> Void, label: String, icon: String? = nil, cornerRadius: CGFloat = 18, paddings: [CGFloat] = [5, 20], fontSize: CGFloat = 22, fontWeight: Font.Weight = .bold, width: CGFloat? = nil) -> some View {
     Button(action: {
         action()
@@ -150,6 +151,7 @@ public extension View {
         .font(.system(size: fontSize, weight: .bold))
         .foregroundColor(.Neumorphic.secondary)
 }
+@_disfavoredOverload
 @ViewBuilder public func NeuText(_ text: String, fontSize: CGFloat = 22) -> some View {
     Text(text)
         .font(.system(size: fontSize, weight: .bold))
@@ -176,6 +178,7 @@ public extension View {
             .softSwitchToggleStyle(tint: tint, labelsHidden: true)
     }
 }
+@_disfavoredOverload
 @ViewBuilder public func NeuToggle(isOn: Binding<Bool>, label: () -> some View, tint: Color = .green) -> some View {
     HStack {
         label()
