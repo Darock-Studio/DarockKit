@@ -438,3 +438,33 @@ public extension View {
             .overlay(roundedRect.strokeBorder(content, lineWidth: width))
     }
 }
+
+public extension View {
+    @ViewBuilder
+    func withDismissButton(_ action: @escaping () -> Void, placement: HorizontalAlignment = .trailing) -> some View {
+        self
+        #if !os(watchOS)
+            .toolbar {
+                ToolbarItem(placement: placement == .leading ? .topBarLeading : .topBarTrailing) {
+                    if #available(iOS 17.0, *) {
+                        Button(action: action, label: {
+                            Image(systemName: "xmark")
+                                .bold()
+                                .foregroundStyle(.gray)
+                        })
+                        .buttonStyle(.bordered)
+                        .buttonBorderShape(.circle)
+                    } else {
+                        Button(action: action, label: {
+                            Image(systemName: "xmark")
+                                .bold()
+                                .foregroundStyle(.gray)
+                        })
+                        .buttonStyle(.bordered)
+                        .buttonBorderShape(.roundedRectangle(radius: 1000))
+                    }
+                }
+            }
+        #endif
+    }
+}
