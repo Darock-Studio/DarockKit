@@ -6,12 +6,13 @@ import PackageDescription
 let package = Package(
     name: "DarockKit",
     platforms: [
-        .iOS(.v16), .watchOS(.v9), .macOS(.v11), .tvOS(.v16)
+        .iOS(.v16), .watchOS(.v9), .macOS(.v13), .tvOS(.v16)
     ],
     products: [
         .library(
             name: "DarockKit",
-            targets: ["DarockKit"])
+            targets: ["DarockKit"]
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/Alamofire/Alamofire", from: "5.8.1"),

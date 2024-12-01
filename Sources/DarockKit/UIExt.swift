@@ -11,16 +11,6 @@ import SwiftUI
 import WatchKit
 #endif
 
-@available(*, deprecated, renamed: "View.centerAligned", message: "`CenterAlign` modifier was deprecated")
-public struct CenterAlign: ViewModifier {
-    public func body(content: Content) -> some View {
-        HStack {
-            Spacer()
-            content
-            Spacer()
-        }
-    }
-}
 public extension View {
     func centerAligned() -> some View {
         HStack {
@@ -31,19 +21,13 @@ public extension View {
     }
 }
 
-@available(*, deprecated, renamed: "View.noAutoInput", message: "`NoAutoInput` modifier was deprecated")
-public struct NoAutoInput: ViewModifier {
-    public func body(content: Content) -> some View {
-        content
-            .autocorrectionDisabled()
-            .textInputAutocapitalization(.never)
-    }
-}
 public extension View {
     func noAutoInput() -> some View {
         self
             .autocorrectionDisabled()
+        #if !os(macOS)
             .textInputAutocapitalization(.never)
+        #endif
     }
 }
 
@@ -65,7 +49,9 @@ public extension View {
                     TextField(placeholder, text: text)
                         .foregroundColor(.Neumorphic.secondary)
                         .autocorrectionDisabled()
+                    #if !os(macOS)
                         .textInputAutocapitalization(.never)
+                    #endif
                 } else {
                     TextField(placeholder, text: text)
                         .foregroundColor(.Neumorphic.secondary)
@@ -316,6 +302,7 @@ public struct Zoomable: ViewModifier {
 #if canImport(WebKit)
 import WebKit
 
+#if canImport(UIKit)
 public struct WebView: UIViewRepresentable {
     let url: URL
     let builder: ((WKWebView) -> WKWebView)?
@@ -340,6 +327,31 @@ public struct WebView: UIViewRepresentable {
     
     public func updateUIView(_ uiView: WKWebView, context: Context) { }
 }
+#elseif canImport(AppKit)
+public struct WebView: NSViewRepresentable {
+    let url: URL
+    let builder: ((WKWebView) -> WKWebView)?
+    
+    public init(url: URL) {
+        self.url = url
+        self.builder = nil
+    }
+    public init(url: URL, builder: @escaping (WKWebView) -> WKWebView) {
+        self.url = url
+        self.builder = builder
+    }
+    
+    public func makeNSView(context: Context) -> WKWebView {
+        var webView = WKWebView()
+        if let builder {
+            webView = builder(webView)
+        }
+        webView.load(URLRequest(url: url))
+        return webView
+    }
+    public func updateNSView(_ nsView: WKWebView, context: Context) { }
+}
+#endif
 #endif
 
 #if os(iOS)
@@ -445,7 +457,8 @@ public extension View {
         self
         #if !os(watchOS)
             .toolbar {
-                ToolbarItem(placement: placement == .leading ? .topBarLeading : .topBarTrailing) {
+                ToolbarItem(placement: placement == .leading ? .cancellationAction : .confirmationAction) {
+                    #if !os(macOS)
                     if #available(iOS 17.0, *) {
                         Button(action: action, label: {
                             Image(systemName: "xmark")
@@ -463,6 +476,17 @@ public extension View {
                         .buttonStyle(.bordered)
                         .buttonBorderShape(.roundedRectangle(radius: 1000))
                     }
+                    #else
+                    if #available(macOS 14.0, *) {
+                        Button(action: action, label: {
+                            Image(systemName: "xmark")
+                                .bold()
+                                .foregroundStyle(.gray)
+                        })
+                        .buttonStyle(.bordered)
+                        .buttonBorderShape(.roundedRectangle(radius: 1000))
+                    }
+                    #endif
                 }
             }
         #endif
