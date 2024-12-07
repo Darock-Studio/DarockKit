@@ -2,6 +2,10 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
+#if os(iOS)
+import UIKit
+#endif
+
 private let void: Void = ()
 
 public class DarockKit {
